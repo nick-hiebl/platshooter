@@ -1,6 +1,9 @@
 var layers = {};
 var allLayers = [];
 
+var width;
+var height;
+
 function myCanvas(id) {
     var canvas = new Canvas(id);
     allLayers.push(canvas);
@@ -14,13 +17,15 @@ function setup() {
 }
 
 function resize() {
+    width = window.innerWidth;
+    height = window.innerHeight;
     for (var layer of allLayers) {
-        layer.resize(window.innerWidth, window.innerHeight);
+        layer.resize(width, height);
     }
 }
 
 function draw() {
-    layers.background.filter('blur(5px)');
+    layers.background.filter("blur(15px)");
     layers.background.color("black");
     layers.background.background();
     layers.background.color("yellow");
