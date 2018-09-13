@@ -41,14 +41,22 @@ function draw() {
     layers.background.color("black");
     layers.background.background();
     layers.background.color("#da3");
-    var shake = rand2() * 0.02 + last * 0.98;
+    var shake = rand2() * 0.025 + last * 0.975;
     last = shake;
     var now = Date.now();
     var top = height *
         (0.3 +
-            (Math.sin(now / 300) * 0.02 + Math.sin(now / 305) * 0.02 + // Basic oscillation
-            0.1 * shake * sin2(now / 5000)));
-    layers.background.fillRect(-15, top, width + 30, height * 0.4);
+            (Math.sin(now / 300) * 0.01 + Math.sin(now / 305) * 0.01)); // Basic oscillation
+    var randomness = height * 0.1 * shake * sin2(now / 5000);
+
+    layers.background.fillRect(-15, top + randomness, width + 30, height * 0.4);
+
+    layers.background.color("black");
+    var cycleLength = 500;
+    var N = 2;
+    for (var i = 0; i < N; i++) {
+        layers.background.fillRect(1.4 * width * (0.8 - ((now + i * cycleLength / N) % cycleLength) / cycleLength), 0, 40, height);
+    }
 }
 
 function mainLoop() {
