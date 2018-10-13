@@ -77,6 +77,10 @@ function Canvas(id) {
     this.filter = function(filter) {
         this.ctx.filter = filter;
     }
+
+    this.drawImage = function(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight) {
+        this.ctx.drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight);
+    }
 }
 
 var SETUPS = [];

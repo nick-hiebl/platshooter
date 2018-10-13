@@ -4,6 +4,8 @@ var allLayers = [];
 var width;
 var height;
 
+var tileset;
+
 function myCanvas(id) {
     var canvas = new Canvas(id);
     allLayers.push(canvas);
@@ -12,6 +14,9 @@ function myCanvas(id) {
 
 function setup() {
     layers.background = myCanvas("background");
+    layers.foreground = myCanvas("foreground");
+    tileset = new Image();
+    tileset.src = "https://opengameart.org/sites/default/files/generic-platformer-tiles.png";
 
     addUpdate(mainLoop);
 }
@@ -36,7 +41,7 @@ function sin2(x) {
 
 var last = 0;
 
-function draw() {
+function bgDraw() {
     layers.background.filter("blur(15px)");
     layers.background.color("black");
     layers.background.background();
@@ -57,6 +62,14 @@ function draw() {
     for (var i = 0; i < N; i++) {
         layers.background.fillRect(1.4 * width * (0.8 - ((now + i * cycleLength / N) % cycleLength) / cycleLength), 0, 40, height);
     }
+}
+
+
+
+function draw() {
+    // bgDraw();
+    layers.foreground.ctx.clearRect(0, 0, 10000, 10000);
+    layers.foreground.drawImage(tileset, 0, 0, 32, 32, 0, 0, 32, 32);
 }
 
 function mainLoop() {
