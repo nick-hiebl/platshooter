@@ -6,6 +6,8 @@ var height;
 
 var tileset;
 
+var levelGrid;
+
 function myCanvas(id) {
     var canvas = new Canvas(id);
     allLayers.push(canvas);
@@ -17,6 +19,22 @@ function setup() {
     layers.foreground = myCanvas("foreground");
     tileset = new Image();
     tileset.src = "https://opengameart.org/sites/default/files/generic-platformer-tiles.png";
+
+    levelGrid = [];
+
+    for (let i = 0; i < 64; i++) {
+        let l = [];
+        for (let j = 0; j < 128; j++) {
+            if (Math.random() < 0.5) {
+                l.push(0);
+            } else {
+                l.push(1);
+            }
+        }
+        levelGrid.push(l);
+    }
+
+    resize();
 
     addUpdate(mainLoop);
 }
@@ -64,17 +82,91 @@ function bgDraw() {
     }
 }
 
+function getTileOffset(x, y) {
+    let map = [[0, 0, 0],
+               [0, 0, 0],
+               [0, 0, 0]];
 
+    for (let i = -1; i <= 1; i++) {
+        for (let j = -1; j <= 1; j++) {
+            if (y + i < 0 || y + i >= levelGrid.length) {
+                map[i+1][j+1] = 1;
+            } else if (x + i < 0 || x + i > levelGrid[y+i].length) {
+                map[i+1][j+1] = 1;
+            } else {
+                map[i+1][j+1] = levelGrid[y+i][x+j];
+            }
+        }
+    }
+
+    if (map[1][1] == 0) {
+        return {x: 6, y: 7};
+    }
+
+    // Must be solid now
+    if (map[1][0] == 0) {
+        // No left
+        if (map[1][2] == 0) {
+            // No left no right
+            if (map[0][1] == 0) {
+                // Pillar top
+                if (map[2][1] == 0) {
+                    return {x: 1, y: 3};
+                } else {
+                    return {x: 0, y: 1};
+                }
+            } else {
+                // Pillar non-top
+                if (map[2][1] == 0) {
+                    return {x: 0, y: 3};
+                } else {
+                    return {x: 0, y: 2};
+                }
+            }
+        } else {
+            // No left
+            if (map[0][1] == 0) {
+                // Grass top
+                if (map[2][1] == 0) {
+                    // No under
+                    return {x: 0, y: 0};
+                } else {
+                    // NO TEXTURE
+                }
+            }
+        }
+    }
+}
 
 function draw() {
     // bgDraw();
     layers.foreground.ctx.clearRect(0, 0, 10000, 10000);
-    layers.foreground.drawImage(tileset, 0, 0, 32, 32, 0, 0, 32, 32);
+    // layers.foreground.drawImage(tileset, 0, 0, 32, 32, 0, 0, 32, 32);
+    const TILESIZE = 16;
+    for (let y = 0; y < levelGrid.length; y++) {
+        for (let x = 0; x < levelGrid[y].length; x++) {
+            if (levelGrid[y][x] == 1) {
+                let ref = getTileOffset(x, y);
+
+                if (ref) {
+                    console.log(ref);
+                    layers.foreground.drawImage(tileset, 32 * ref.x, 32 * ref.y,
+                                                32, 32, x * TILESIZE, y * TILESIZE,
+                                                TILESIZE, TILESIZE);
+                } else {
+                    layers.foreground.color('blue');
+                    layers.foreground.fillRect(x * TILESIZE, y * TILESIZE, TILESIZE, TILESIZE);
+                }
+            } else {
+                layers.foreground.color('white');
+                layers.foreground.fillRect(x * TILESIZE, y * TILESIZE, TILESIZE, TILESIZE);
+            }
+        }
+    }
 }
 
 function mainLoop() {
-    resize();
-    draw();
+    // draw();
 }
 
 addSetup(setup);
