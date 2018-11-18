@@ -149,7 +149,6 @@ function draw() {
                 let ref = getTileOffset(x, y);
 
                 if (ref) {
-                    console.log(ref);
                     layers.foreground.drawImage(tileset, 32 * ref.x, 32 * ref.y,
                                                 32, 32, x * TILESIZE, y * TILESIZE,
                                                 TILESIZE, TILESIZE);
@@ -166,7 +165,7 @@ function draw() {
 }
 
 function mainLoop() {
-    // draw();
+    draw();
 }
 
 addSetup(setup);
