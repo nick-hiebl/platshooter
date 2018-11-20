@@ -103,38 +103,10 @@ function getTileOffset(x, y) {
         return {x: 6, y: 7};
     }
 
-    // Must be solid now
-    if (map[1][0] == 0) {
-        // No left
-        if (map[1][2] == 0) {
-            // No left no right
-            if (map[0][1] == 0) {
-                // Pillar top
-                if (map[2][1] == 0) {
-                    return {x: 1, y: 3};
-                } else {
-                    return {x: 0, y: 1};
-                }
-            } else {
-                // Pillar non-top
-                if (map[2][1] == 0) {
-                    return {x: 0, y: 3};
-                } else {
-                    return {x: 0, y: 2};
-                }
-            }
-        } else {
-            // No left
-            if (map[0][1] == 0) {
-                // Grass top
-                if (map[2][1] == 0) {
-                    // No under
-                    return {x: 0, y: 0};
-                } else {
-                    // NO TEXTURE
-                }
-            }
-        }
+    if (map[0][1] == 0) {
+        return {x: 8, y: 0};
+    } else {
+        return {x: 8, y: 1};
     }
 }
 
